@@ -9,7 +9,7 @@ community:
   login-expired-seconds:
     default: 3600
     remember: 8640000
-  upload-path: D:/IDEA/IDEA/IDEAProjects/HeartfeltWishesCommunity/header_image/
+  upload-path: D:/IDEA/IDEA/IDEAProjects/SchoolCommunity/header_image/
 
 spring:
   datasource:
