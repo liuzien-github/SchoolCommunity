@@ -91,6 +91,7 @@ public class DiscussPostController {
                 PageInfo<Comment> replys = commentService.selectCommentsByPage(ConstantUtil.ENTITY_TYPE_COMMENT, comment.getId(), 1, Integer.MAX_VALUE);
                 Map<String, Object> attributesComment = comment.getAttributes();
                 attributesComment.put("replysList", replys.getList());
+                attributesComment.put("replysListSize", replys.getList().size());
                 attributesComment.put("likeCount", likeService.findEntityLikeCount(ConstantUtil.ENTITY_TYPE_COMMENT, comment.getId()));
                 attributesComment.put("user", userService.findUserById(comment.getUserId()));
                 if (user != null)

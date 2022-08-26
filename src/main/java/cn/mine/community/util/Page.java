@@ -8,6 +8,7 @@ public class Page<T> {
     private int navigatePages = 8;
     private long total;
     private List<T> list;
+    private int size;
     private String path;
 
     public int getPageNum() {
@@ -51,6 +52,11 @@ public class Page<T> {
 
     public void setList(List<T> list) {
         this.list = list;
+        this.size = list.size();
+    }
+
+    public int getSize() {
+        return this.size;
     }
 
     public String getPath() {
