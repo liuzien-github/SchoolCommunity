@@ -15,6 +15,11 @@ public interface ConstantUtil {
     String TOPIC_FOLLOW = "follow";
     String TOPIC_PUBLISH = "publish";
     String TOPIC_DELETE = "delete";
+    String TOPIC_SHARE = "share";
+
+    String AUTHORITY_USER = "user";
+    String AUTHORITY_ADMIN = "admin";
+    String AUTHORITY_MODERATOR = "moderator";
 
     int SYSTEM_USER_ID = 1;
 }

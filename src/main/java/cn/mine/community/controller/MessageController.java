@@ -127,8 +127,8 @@ public class MessageController {
         Message message = null;
 
         message = messageService.selectLatestNotice(user.getId(), ConstantUtil.TOPIC_COMMENT);
-        messageMap = new HashMap<>();
         if (message != null) {
+            messageMap = new HashMap<>();
             messageMap.put("message", message);
 
             String content = HtmlUtils.htmlUnescape(message.getContent());
@@ -141,12 +141,12 @@ public class MessageController {
 
             messageMap.put("count", messageService.selectNoticeCount(user.getId(), ConstantUtil.TOPIC_COMMENT));
             messageMap.put("unreadCount", messageService.selectUnreadNoticesCount(user.getId(), ConstantUtil.TOPIC_COMMENT));
+            model.addAttribute("messageComment", messageMap);
         }
-        model.addAttribute("messageComment", messageMap);
 
         message = messageService.selectLatestNotice(user.getId(), ConstantUtil.TOPIC_FOLLOW);
-        messageMap = new HashMap<>();
         if (message != null) {
+            messageMap = new HashMap<>();
             messageMap.put("message", message);
 
             String content = HtmlUtils.htmlUnescape(message.getContent());
@@ -158,12 +158,12 @@ public class MessageController {
 
             messageMap.put("count", messageService.selectNoticeCount(user.getId(), ConstantUtil.TOPIC_FOLLOW));
             messageMap.put("unreadCount", messageService.selectUnreadNoticesCount(user.getId(), ConstantUtil.TOPIC_FOLLOW));
+            model.addAttribute("messageFollow", messageMap);
         }
-        model.addAttribute("messageFollow", messageMap);
 
         message = messageService.selectLatestNotice(user.getId(), ConstantUtil.TOPIC_LIKE);
-        messageMap = new HashMap<>();
         if (message != null) {
+            messageMap = new HashMap<>();
             messageMap.put("message", message);
 
             String content = HtmlUtils.htmlUnescape(message.getContent());
@@ -176,8 +176,8 @@ public class MessageController {
 
             messageMap.put("count", messageService.selectNoticeCount(user.getId(), ConstantUtil.TOPIC_LIKE));
             messageMap.put("unreadCount", messageService.selectUnreadNoticesCount(user.getId(), ConstantUtil.TOPIC_LIKE));
+            model.addAttribute("messageLike", messageMap);
         }
-        model.addAttribute("messageLike", messageMap);
 
         model.addAttribute("allUnReadNoticesCount", messageService.selectUnreadNoticesCount(user.getId(), null));
         model.addAttribute("allUnReadLettersCount", messageService.selectUnreadLettersCount(user.getId(), null));

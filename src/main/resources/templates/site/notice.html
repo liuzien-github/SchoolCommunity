@@ -82,7 +82,7 @@
 				
 				<!-- 通知列表 -->
 				<ul class="list-unstyled">
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${messageComment.message!=null}">
+					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${messageComment!=null}">
 						<span class="badge badge-danger" th:text="${messageComment.unreadCount!=0?messageComment.unreadCount:''}">3</span>
 						<img src="http://static.nowcoder.com/images/head/reply.png" class="mr-4 user-header" alt="通知图标">
 						<div class="media-body">
@@ -98,7 +98,7 @@
 							</div>
 						</div>
 					</li>
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${messageLike.message!=null}">
+					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${messageLike!=null}">
 						<span class="badge badge-danger" th:text="${messageLike.unreadCount!=0?messageLike.unreadCount:''}">3</span>
 						<img src="http://static.nowcoder.com/images/head/like.png" class="mr-4 user-header" alt="通知图标">
 						<div class="media-body">
@@ -114,7 +114,7 @@
 							</div>
 						</div>
 					</li>
-					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${messageFollow.message!=null}">
+					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:if="${messageFollow!=null}">
 						<span class="badge badge-danger" th:text="${messageFollow.unreadCount!=0?messageFollow.unreadCount:''}">3</span>
 						<img src="http://static.nowcoder.com/images/head/follow.png" class="mr-4 user-header" alt="通知图标">
 						<div class="media-body">

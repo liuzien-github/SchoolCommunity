@@ -10,6 +10,16 @@ community:
     default: 3600
     remember: 8640000
   upload-path: D:/IDEA/IDEA/IDEAProjects/SchoolCommunity/header_image/
+  wk:
+    image:
+      command: D:/AppData/wkhtmltox/wkhtmltopdf/bin/wkhtmltoimage
+      storage: D:/AppData/wkhtmltox/image-store/
+  caffeine:
+    posts:
+      first-max-size: 15
+      first-expire-seconds: 180
+      second-max-size: 15
+      second-expire-seconds: 3600
 
 spring:
   datasource:
@@ -51,6 +61,21 @@ spring:
       group-id: community-consumer-group
       enable-auto-commit: true
       auto-commit-interval: 3000
+  quartz:
+    job-store-type: jdbc
+    scheduler-name: communityScheduler
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            isClustered: true
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 5
 
 mybatis-plus:
   global-config:

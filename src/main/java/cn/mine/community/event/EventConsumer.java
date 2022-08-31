@@ -11,9 +11,11 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,12 @@ import java.util.Set;
 @Slf4j
 @Component
 public class EventConsumer {
+    @Value("${community.wk.image.storage}")
+    private String storage;
+
+    @Value("${community.wk.image.command}")
+    private String command;
+
     @Autowired
     private MessageService messageService;
 
@@ -98,5 +106,32 @@ public class EventConsumer {
         }
 
         elasticsearchService.deleteDiscussPostById(event.getEntityId());
+    }
+
+    @KafkaListener(topics = {ConstantUtil.TOPIC_SHARE})
+    public void handleShareMessage(ConsumerRecord record) {
+        if (record == null || record.value() == null) {
+            log.error("消息内容为空！");
+            return;
+        }
+
+        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+        if (event == null) {
+            log.error("消息格式错误！");
+            return;
+        }
+
+        Map<String, Object> attributes = event.getAttributes();
+        String htmlUrl = (String) attributes.get("htmlUrl");
+        String fileName = (String) attributes.get("fileName");
+        String suffix = (String) attributes.get("suffix");
+
+        String cmd = command + " --quality 75 " + htmlUrl + " " + storage + fileName + suffix;
+        try {
+            Runtime.getRuntime().exec(cmd);
+            log.info("生成长图成功：" + cmd);
+        } catch (IOException e) {
+            log.error("生成长图失败：" + e.getMessage());
+        }
     }
 }

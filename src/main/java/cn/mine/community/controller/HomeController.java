@@ -9,8 +9,10 @@ import cn.mine.community.util.Page;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -32,8 +34,8 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String getIndexPage(Page<DiscussPost> page) {
-        PageInfo<DiscussPost> pageInfo = discussPostService.selectDiscussPostsByPage(0, page.getPageNum(), page.getPageSize());
+    public String getIndexPage(Page<DiscussPost> page, Model model, @RequestParam(name = "orderMode", defaultValue = "0") int orderMode) {
+        PageInfo<DiscussPost> pageInfo = discussPostService.selectDiscussPostsByPage(0, page.getPageNum(), page.getPageSize(), orderMode);
 
         List<DiscussPost> list = pageInfo.getList();
         if (list != null) {
@@ -46,7 +48,8 @@ public class HomeController {
 
         page.setList(list);
         page.setTotal(pageInfo.getTotal());
-        page.setPath("/index");
+        page.setPath("/index?orderMode=" + orderMode);
+        model.addAttribute("orderMode", orderMode);
 
         return "index";
     }
@@ -54,5 +57,10 @@ public class HomeController {
     @RequestMapping(value = "/error", method = RequestMethod.GET)
     public String getErrorPage() {
         return "error/500";
+    }
+
+    @RequestMapping(value = "/denied", method = RequestMethod.GET)
+    public String getDeniedPage() {
+        return "error/404";
     }
 }

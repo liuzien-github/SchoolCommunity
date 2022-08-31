@@ -8,7 +8,9 @@ import cn.mine.community.service.LikeService;
 import cn.mine.community.util.ConstantUtil;
 import cn.mine.community.util.GeneralUtil;
 import cn.mine.community.util.HostHolder;
+import cn.mine.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +26,9 @@ public class LikeController {
 
     @Autowired
     private EventProducer eventProducer;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @LoginCheck
     @RequestMapping(value = "/like", method = RequestMethod.POST)
@@ -47,6 +52,9 @@ public class LikeController {
             event.getAttributes().put("discussPostId", discussPostId);
             eventProducer.fireEvent(event);
         }
+
+        if (entityType == ConstantUtil.ENTITY_TYPE_POST)
+            redisTemplate.opsForSet().add(RedisKeyUtil.getPostScoreKey(), discussPostId);
 
         return GeneralUtil.getJsonString(0, null, map);
     }

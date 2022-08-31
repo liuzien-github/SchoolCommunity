@@ -9,12 +9,10 @@ import cn.mine.community.service.CommentService;
 import cn.mine.community.service.DiscussPostService;
 import cn.mine.community.service.LikeService;
 import cn.mine.community.service.UserService;
-import cn.mine.community.util.ConstantUtil;
-import cn.mine.community.util.GeneralUtil;
-import cn.mine.community.util.HostHolder;
-import cn.mine.community.util.Page;
+import cn.mine.community.util.*;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +42,9 @@ public class DiscussPostController {
     @Autowired
     private EventProducer eventProducer;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @RequestMapping(value = "/display", method = RequestMethod.POST)
     @ResponseBody
     public String displayDiscussPost(String title, String content) {
@@ -65,6 +66,8 @@ public class DiscussPostController {
                 .setEntityType(ConstantUtil.ENTITY_TYPE_POST)
                 .setEntityId(discussPost.getId());
         eventProducer.fireEvent(event);
+
+        redisTemplate.opsForSet().add(RedisKeyUtil.getPostScoreKey(), discussPost.getId());
 
         return GeneralUtil.getJsonString(0, "帖子发表成功！");
     }
@@ -120,5 +123,60 @@ public class DiscussPostController {
         page.setPath("/discuss/detail/" + discussPostId);
 
         return "site/discuss-detail";
+    }
+
+    @RequestMapping(value = "/top", method = RequestMethod.POST)
+    @ResponseBody
+    public String setTop(int discussPostId) {
+        DiscussPost post = discussPostService.findDiscussPostById(discussPostId);
+        int newType = 0;
+        if (post.getType() == 0)
+            newType = 1;
+        discussPostService.updateDiscussPostTypeById(discussPostId, newType);
+
+        Event event = new Event()
+                .setTopic(ConstantUtil.TOPIC_PUBLISH)
+                .setUserId(HostHolder.getUser().getId())
+                .setEntityType(ConstantUtil.ENTITY_TYPE_POST)
+                .setEntityId(discussPostId);
+        eventProducer.fireEvent(event);
+
+        return GeneralUtil.getJsonString(0);
+    }
+
+    @RequestMapping(value = "/wonderful", method = RequestMethod.POST)
+    @ResponseBody
+    public String setWonderful(int discussPostId) {
+        DiscussPost post = discussPostService.findDiscussPostById(discussPostId);
+        int newStatus = 0;
+        if (post.getStatus() == 0)
+            newStatus = 1;
+        discussPostService.updateDiscussPostStatusById(discussPostId, newStatus);
+
+        Event event = new Event()
+                .setTopic(ConstantUtil.TOPIC_PUBLISH)
+                .setUserId(HostHolder.getUser().getId())
+                .setEntityType(ConstantUtil.ENTITY_TYPE_POST)
+                .setEntityId(discussPostId);
+        eventProducer.fireEvent(event);
+
+        redisTemplate.opsForSet().add(RedisKeyUtil.getPostScoreKey(), post.getId());
+
+        return GeneralUtil.getJsonString(0);
+    }
+
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public String setDelete(int discussPostId) {
+        discussPostService.deleteDiscussPostById(discussPostId);
+
+        Event event = new Event()
+                .setTopic(ConstantUtil.TOPIC_DELETE)
+                .setUserId(HostHolder.getUser().getId())
+                .setEntityType(ConstantUtil.ENTITY_TYPE_POST)
+                .setEntityId(discussPostId);
+        eventProducer.fireEvent(event);
+
+        return GeneralUtil.getJsonString(0);
     }
 }

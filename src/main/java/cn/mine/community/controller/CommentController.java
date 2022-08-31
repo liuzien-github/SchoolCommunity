@@ -9,7 +9,9 @@ import cn.mine.community.service.CommentService;
 import cn.mine.community.service.DiscussPostService;
 import cn.mine.community.util.ConstantUtil;
 import cn.mine.community.util.HostHolder;
+import cn.mine.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,9 @@ public class CommentController {
 
     @Autowired
     private EventProducer eventProducer;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @LoginCheck
     @RequestMapping(value = "/comment/add/{discussPostId}", method = RequestMethod.POST)
@@ -58,6 +63,8 @@ public class CommentController {
                     .setEntityType(ConstantUtil.ENTITY_TYPE_POST)
                     .setEntityId(discussPostId);
             eventProducer.fireEvent(event);
+
+            redisTemplate.opsForSet().add(RedisKeyUtil.getPostScoreKey(), discussPostId);
         }
 
         return "redirect:/discuss/detail/" + discussPostId;
