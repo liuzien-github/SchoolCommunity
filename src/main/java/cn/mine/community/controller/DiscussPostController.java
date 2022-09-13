@@ -57,7 +57,11 @@ public class DiscussPostController {
                 .setUserId(user.getId())
                 .setTitle(title)
                 .setContent(content)
-                .setCreateTime(new Date());
+                .setCreateTime(new Date())
+                .setType(0)
+                .setStatus(0)
+                .setCommentCount(0)
+                .setScore(0.0);
         discussPostService.displayDiscussPost(discussPost);
 
         Event event = new Event()

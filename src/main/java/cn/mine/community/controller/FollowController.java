@@ -40,7 +40,7 @@ public class FollowController {
                 .setUserId(HostHolder.getUser().getId())
                 .setEntityType(entityType)
                 .setEntityId(entityId)
-                .setUserId(entityId);
+                .setEntityUserId(entityId);
         eventProducer.fireEvent(event);
 
         return GeneralUtil.getJsonString(0, "关注成功！");

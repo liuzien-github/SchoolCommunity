@@ -142,7 +142,7 @@
 							</div>
 							<!-- 回复列表 -->
 							<ul class="list-unstyled mt-4 bg-gray p-3 font-size-12 text-muted">
-								<li class="pb-3 pt-3 mb-3 border-bottom" th:each="reply:${comment.attributes.replys}">
+								<li class="pb-3 pt-3 mb-3 border-bottom" th:each="reply:${comment.attributes.replysList}">
 									<div>
 										<span th:if="${reply.attributes.target==null}">
 											<b class="text-info" th:utext="${reply.attributes.user.username}">寒江雪</b>:&nbsp;&nbsp;
@@ -160,7 +160,7 @@
 												<b th:text="${reply.attributes.likeStatus==0?'赞':'已赞'}">赞</b> <i th:text="${reply.attributes.likeCount}"></i>
 											</a></li>
 											<li class="d-inline ml-2">|</li>
-											<li class="d-inline ml-2"><a th:href="|huifu-${replyStat.count}|" data-toggle="collapse" class="text-primary">回复</a></li>
+											<li class="d-inline ml-2"><a th:href="|#huifu-${replyStat.count}|" data-toggle="collapse" class="text-primary">回复</a></li>
 										</ul>
 										<div th:id="|huifu-${replyStat.count}|" class="mt-4 collapse">
 											<form method="post" th:action="@{|/comment/add/${post.id}|}">

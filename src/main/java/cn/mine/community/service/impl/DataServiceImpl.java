@@ -8,6 +8,7 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisStringCommands;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+@Service
 public class DataServiceImpl implements DataService {
     @Autowired
     private RedisTemplate redisTemplate;

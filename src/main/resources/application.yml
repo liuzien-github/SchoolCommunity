@@ -9,7 +9,7 @@ community:
   login-expired-seconds:
     default: 3600
     remember: 8640000
-  upload-path: D:/IDEA/IDEA/IDEAProjects/SchoolCommunity/header_image/
+  upload-path: D:/IDEA/IDEA/IDEAProjects/SchoolCommunity/header-image/
   wk:
     image:
       command: D:/AppData/wkhtmltox/wkhtmltopdf/bin/wkhtmltoimage
@@ -49,7 +49,7 @@ spring:
       mail.smtp.socketFactory.fallback: false
   redis:
     database: 1
-    host: localhost
+    host: 127.0.0.1
     port: 6379
   data:
     elasticsearch:

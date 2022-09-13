@@ -43,7 +43,9 @@ public class MessageController {
                 Map<String, Object> attributes = message.getAttributes();
                 attributes.put("lettersCount", messageService.selectConversationLettersCount(message.getConversationId()));
                 attributes.put("unReadLettersCount", messageService.selectUnreadLettersCount(user.getId(), message.getConversationId()));
-                if (user.getId() == message.getFromId())
+                int userId = user.getId();
+                int fromId = message.getFromId();
+                if (userId == fromId)
                     attributes.put("targetUser", userService.findUserById(message.getToId()));
                 else
                     attributes.put("targetUser", userService.findUserById(message.getFromId()));
@@ -69,13 +71,15 @@ public class MessageController {
 
         User user = HostHolder.getUser();
         Message message = pageInfo.getList().get(0);
-        if (user.getId() == message.getFromId()) {
+        int userId = user.getId();
+        int fromId = message.getFromId();
+        if (userId == fromId) {
             model.addAttribute("targetUser", userService.findUserById(message.getToId()));
         } else {
             model.addAttribute("targetUser", userService.findUserById(message.getFromId()));
         }
 
-        List<Integer> ids = getUnReadMessage(pageInfo);
+        List<Integer> ids = getUnReadMessage(pageInfo, userId);
         if (!ids.isEmpty())
             messageService.updateReadStatus(ids);
 
@@ -215,6 +219,20 @@ public class MessageController {
             messageService.updateReadStatus(ids);
 
         return "site/notice-detail";
+    }
+
+    private List<Integer> getUnReadMessage(@NotNull PageInfo<Message> pageInfo, int userId) {
+        List<Integer> ids = new ArrayList<>();
+        List<Message> list = pageInfo.getList();
+        if (list != null) {
+            for (Message message : list) {
+                if (message.getStatus() == 0 && message.getToId() == userId) {
+                    ids.add(message.getId());
+                }
+            }
+        }
+
+        return ids;
     }
 
     private List<Integer> getUnReadMessage(@NotNull PageInfo<Message> pageInfo) {
