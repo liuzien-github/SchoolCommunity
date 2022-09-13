@@ -115,12 +115,12 @@ public class MessageController {
     @RequestMapping(value = "/letter/delete/{conversationId}/{pageNum}/{size}/{id}", method = RequestMethod.GET)
     public String deleteMessage(@PathVariable("conversationId") String conversationId, @PathVariable("pageNum") Integer pageNum, @PathVariable("id") Integer id, @PathVariable("size") Integer size) {
         messageService.deleteLetter(id);
-        if (size > 1)
+        /*if (size > 1)
             return "redirect:/letter/detail/" + conversationId + "(pageNum=" + pageNum + ")";
         else if (pageNum > 1)
             return "redirect:/letter/detail/" + conversationId + "(pageNum=" + (pageNum - 1) + ")";
-        else
-            return "redirect:/letter/list";
+        else*/
+        return "redirect:/letter/list";
     }
 
     @LoginCheck

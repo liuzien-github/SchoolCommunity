@@ -79,7 +79,8 @@
 							<div class="toast-header">
 								<strong class="mr-auto" th:utext="${notice.attributes.fromUser.username}">落基山脉下的闲人</strong>
 								<small th:text="${#dates.format(notice.createTime, 'yyyy-MM-dd HH:mm:ss')}">2019-04-25 15:49:32</small>
-								<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+								<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close"
+									th:onclick="remove([[${notice.conversationId}]], [[${page.pageNum}]], [[${page.size}]],[[${notice.id}]]);">
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
@@ -194,6 +195,9 @@
     <script>
 		function back() {
 			location.href = CONTEXT_PATH + "/notice/list";
+		}
+		function remove(conversationId, pageNum, size, id) {
+			location.href = CONTEXT_PATH + "/letter/delete/" + conversationId + "/" + pageNum + "/" + size + "/" + id;
 		}
 	</script>
 </body>
